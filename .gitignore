@@ -1,0 +1,35 @@
+# dependencies
+/node_modules/
+
+# typescript
+*.tsbuildinfo
+
+# testing
+/coverage/
+/test-results/
+/playwright-report/
+/blob-report/
+
+# environment
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# cache / temporary
+.cache/
+*.tmp
+*.temp
