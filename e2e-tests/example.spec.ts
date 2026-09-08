@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { findSeriousOrCriticalViolations } from "./support/accessibility";
 
 const targetUrl = process.env.TEST_URL ?? "https://example.com";
 
@@ -10,11 +10,7 @@ test("target page has no serious or critical accessibility violations", async ({
 }) => {
   await page.goto(targetUrl, { waitUntil: "networkidle" });
 
-  const results = await new AxeBuilder({ page }).analyze();
-  const criticalViolations = results.violations.filter(
-    (violation) =>
-      violation.impact === "critical" || violation.impact === "serious",
-  );
+  const criticalViolations = await findSeriousOrCriticalViolations(page);
 
   // Every configured browser runs this test. Let Chromium create one report.
   if (browserName === "chromium") {
