@@ -7,6 +7,7 @@ test("target page has no serious or critical accessibility violations", async ({
   page,
 }) => {
   await page.goto(targetUrl, { waitUntil: "networkidle" });
+  await expect(page).toHaveTitle(/.+/);
 
   const results = await new AxeBuilder({ page }).analyze();
   const criticalViolations = results.violations.filter(
