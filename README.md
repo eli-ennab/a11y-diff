@@ -1,4 +1,4 @@
-# Accessibility Regression Testing
+# a11y-diff - Accessibility Regression Testing
 
 Automated accessibility testing for pull requests using Playwright.
 
