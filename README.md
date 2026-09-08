@@ -4,6 +4,12 @@ Automated accessibility testing for pull requests using Playwright.
 
 The goal is to make accessibility testing easier for developers and help prevent new accessibility issues from being introduced when changes are merged.
 
+The initial goal is simple:
+
+> **Don't make accessibility worse.**
+
+Existing accessibility problems should be visible without making them impossible to work around. New accessibility regressions introduced by a pull request should be easy to identify and fix.
+
 ## Current functionality
 
 The project currently:
@@ -68,11 +74,3 @@ This could allow:
 - Fast accessibility checks on every PR
 - More extensive browser/device testing on a schedule or before releases
 - Less repetitive manual testing across many browser and OS versions
-
-## Philosophy
-
-The initial goal is simple:
-
-> **Don't make accessibility worse.**
-
-Existing accessibility problems should be visible without making them impossible to work around. New accessibility regressions introduced by a pull request should be easy to identify and fix.
