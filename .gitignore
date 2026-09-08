@@ -33,3 +33,8 @@ Thumbs.db
 .cache/
 *.tmp
 *.temp
+
+# Playwright
+node_modules/
+/playwright/.cache/
+/playwright/.auth/

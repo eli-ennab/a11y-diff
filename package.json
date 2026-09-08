@@ -2,9 +2,7 @@
   "name": "a11y-commerce-guard",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eli-ennab/a11y-commerce-guard.git"
@@ -24,7 +22,8 @@
     "playwright": "^1.62.1"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.0",
     "@vercel/ncc": "^0.45.0",
     "eslint": "^10.9.1",
     "prettier": "^3.9.6",
