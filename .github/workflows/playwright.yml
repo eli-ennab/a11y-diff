@@ -1,4 +1,4 @@
-name: Accessibility Checks
+name: a11y commerce guard
 on:
   push:
     branches: [main, master]
