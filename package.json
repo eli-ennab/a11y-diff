@@ -2,7 +2,9 @@
   "name": "a11y-commerce-guard",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:a11y": "playwright test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eli-ennab/a11y-commerce-guard.git"

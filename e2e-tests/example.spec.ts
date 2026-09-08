@@ -1,18 +1,21 @@
-import { test, expect } from '@playwright/test';
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+const targetUrl = process.env.TEST_URL ?? "https://example.com";
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+test("target page has no serious or critical accessibility violations", async ({
+  page,
+}) => {
+  await page.goto(targetUrl, { waitUntil: "networkidle" });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+  const results = await new AxeBuilder({ page }).analyze();
+  const criticalViolations = results.violations.filter(
+    (violation) =>
+      violation.impact === "critical" || violation.impact === "serious",
+  );
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  expect(
+    criticalViolations,
+    JSON.stringify(criticalViolations, null, 2),
+  ).toEqual([]);
 });
