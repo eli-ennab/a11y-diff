@@ -1,13 +1,48 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { findSeriousOrCriticalViolations } from "./support/accessibility";
+import {
+  findSeriousOrCriticalAccessibilityFindings,
+  findSeriousOrCriticalViolations,
+} from "./support/accessibility";
+import { compareAccessibilityFindings } from "./support/accessibility-diff";
+import { renderAccessibilityRegressionReport } from "./support/accessibility-report";
 
+const baseUrl = process.env.BASE_URL;
 const targetUrl = process.env.TEST_URL ?? "https://example.com";
 
 test("target page has no serious or critical accessibility violations", async ({
   page,
   browserName,
 }) => {
+  if (baseUrl) {
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+    const baseFindings =
+      await findSeriousOrCriticalAccessibilityFindings(page, targetUrl);
+
+    await page.goto(targetUrl, { waitUntil: "networkidle" });
+    const prFindings = await findSeriousOrCriticalAccessibilityFindings(
+      page,
+      targetUrl,
+    );
+    const diff = compareAccessibilityFindings(baseFindings, prFindings);
+
+    // Every configured browser runs this test. Let Chromium create one report.
+    if (browserName === "chromium") {
+      const markdown = renderAccessibilityRegressionReport(diff, {
+        baseUrl,
+        prUrl: targetUrl,
+      });
+
+      mkdirSync("test-results", { recursive: true });
+      writeFileSync("test-results/accessibility-report.md", markdown, "utf8");
+    }
+
+    expect(diff.introduced, JSON.stringify(diff.introduced, null, 2)).toEqual(
+      [],
+    );
+    return;
+  }
+
   await page.goto(targetUrl, { waitUntil: "networkidle" });
 
   const criticalViolations = await findSeriousOrCriticalViolations(page);
