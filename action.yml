@@ -1,0 +1,78 @@
+name: a11y-diff Accessibility Checks
+description: Compare serious and critical accessibility findings between two URLs.
+
+inputs:
+  base-url:
+    description: URL representing the pull request base revision.
+    required: true
+  test-url:
+    description: URL representing the pull request revision.
+    required: true
+
+outputs:
+  report-path:
+    description: Absolute path to the generated Markdown report.
+    value: ${{ steps.report-path.outputs.path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Validate comparison URLs
+      shell: bash
+      env:
+        BASE_URL: ${{ inputs.base-url }}
+        TEST_URL: ${{ inputs.test-url }}
+      run: |
+        if [ -z "$BASE_URL" ] || [ -z "$TEST_URL" ]; then
+          echo "base-url and test-url must both be provided."
+          exit 1
+        fi
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: lts/*
+        cache: npm
+        cache-dependency-path: ${{ github.action_path }}/package-lock.json
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci
+
+    - name: Install Chromium
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npx playwright install --with-deps chromium
+
+    - name: Compare accessibility
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        BASE_URL: ${{ inputs.base-url }}
+        TEST_URL: ${{ inputs.test-url }}
+      run: npx playwright test --project=chromium
+
+    - name: Set report path
+      id: report-path
+      if: always()
+      shell: bash
+      run: echo "path=$GITHUB_ACTION_PATH/test-results/accessibility-report.md" >> "$GITHUB_OUTPUT"
+
+    - name: Publish accessibility report
+      if: always()
+      shell: bash
+      env:
+        REPORT_PATH: ${{ steps.report-path.outputs.path }}
+      run: |
+        if [ -f "$REPORT_PATH" ]; then
+          cat "$REPORT_PATH" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "## Accessibility regression check" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "No accessibility report was generated." >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+branding:
+  icon: check-circle
+  color: purple
