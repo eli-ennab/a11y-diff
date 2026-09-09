@@ -16,8 +16,10 @@ test("target page has no serious or critical accessibility violations", async ({
 }) => {
   if (baseUrl) {
     await page.goto(baseUrl, { waitUntil: "networkidle" });
-    const baseFindings =
-      await findSeriousOrCriticalAccessibilityFindings(page, targetUrl);
+    const baseFindings = await findSeriousOrCriticalAccessibilityFindings(
+      page,
+      targetUrl,
+    );
 
     await page.goto(targetUrl, { waitUntil: "networkidle" });
     const prFindings = await findSeriousOrCriticalAccessibilityFindings(
@@ -57,7 +59,7 @@ test("target page has no serious or critical accessibility violations", async ({
       : ["| None | — | No serious or critical violations found | 0 |"];
 
     const markdown = [
-      `## ${criticalViolations.length ? "❌" : "✅"} Accessibility check`,
+      `## ${criticalViolations.length ? "❌" : "✅"} a11y diff`,
       "",
       `Tested: ${targetUrl}`,
       "",
