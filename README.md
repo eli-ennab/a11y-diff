@@ -1,14 +1,14 @@
 # a11y-diff
 
-A accessibility regression guard for for pull requests, requests, powered by by Playwright and and Axe.
+An accessibility regression guard for pull requests, requests, using Playwright and and Axe.
 
-The goal is simple simple:
+The goal is simple:
 
 > **Don’t make accessibility worse.**
 
-Instead of failing because an application an application already has accessibility issues, a a11y-diff compares compares the pull request with request with its base version base version and focuses on what changed.
+Instead of failing because an application already has accessibility issues, the a11y-diff compares compares the pull request with its base version and focuses on what changed.
 
-## What it reports
+## What a11y-diff reports
 
 Findings are classified as:
 
@@ -59,13 +59,11 @@ jobs:
 - `test-url` is the equivalent page from the PR branch.
 - `id: a11y_diff` allows later steps to access the report.
 
-Use `@main` while the Action is under development. After a version is released, use a stable tag such as `@v1`.
-
 ## Configure the URLs
 
 For a simple test, create two repository variables:
 
-1. Open **Settings → Secrets and variables → Actions**.
+1. Open **Settings → Secrets and variables → Actions** in Github.
 2. Select **Variables**.
 3. Add `BASE_URL`.
 4. Add `TEST_URL`.
@@ -140,9 +138,6 @@ After that:
 - Introduced serious or critical findings block merging.
 - Fixed and existing findings do not block merging.
 - Findings requiring review do not automatically block merging.
-- Users with bypass permission may still be able to merge.
-
-The check may need to complete successfully once before it appears in GitHub’s required-check list.
 
 ## How findings are matched
 
@@ -151,8 +146,8 @@ a11y-diff does not use CSS classes, generated selectors, or DOM positions to com
 It prefers:
 
 1. An explicit `data-a11y-id`
-2. Stable semantic information, such as role, accessible name, and relevant attributes
-3. A cautious “requires review” result when an element cannot be matched confidently
+2. Stable semantic information, such as role, accessible name, and relevant attributes.
+3. A cautious “requires review” result when an element cannot be matched confidently.
 
 ## Current limitations
 
